@@ -1,0 +1,33 @@
+{
+  "theme": "dark",
+  "shell": {"islandVisible": true},
+  "corners": {"enabled": true, "radius": 18},
+  "sync": {"portal": false, "kitty": false, "hyprland": false, "wallpaper": false},
+  "wallpapers": {},
+  "overrides": {
+    "accent": null,
+    "glassOpacity": null,
+    "blurIntensity": null
+  },
+  "island": {
+    "topMargin": 8,
+    "hoverExpandDelayMs": 170
+  },
+  "workspaceStyle": "icons",
+  "maxVisibleWorkspaces": 6,
+  "doNotDisturb": false,
+  "modules": {
+    "clock": true,
+    "workspaces": true,
+    "notifications": true,
+    "media": true,
+    "activities": true,
+    "privacy": true,
+    "phone": true,
+    "launcher": true
+  },
+  "animations": {
+    "enabled": true,
+    "scale": 1
+  }
+}

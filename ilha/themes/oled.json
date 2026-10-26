@@ -1,0 +1,5 @@
+{
+  "id": "oled", "name": "Preto / OLED",
+  "colors": {"background": "#000000", "surface": "#000000", "elevatedSurface": "#0b0b0b", "text": "#ffffff", "secondaryText": "#a4a4a4", "accent": "#7aa2f7", "border": "#242424", "success": "#89cda0", "error": "#ee8585", "warning": "#e2ba79"},
+  "glassOpacity": 1.0, "blurIntensity": 0.0
+}

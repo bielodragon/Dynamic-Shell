@@ -1,0 +1,5 @@
+{
+  "id": "gruvbox", "name": "Gruvbox",
+  "colors": {"background": "#282828", "surface": "#3c3836", "elevatedSurface": "#504945", "text": "#ebdbb2", "secondaryText": "#a89984", "accent": "#d79921", "border": "#665c54", "success": "#b8bb26", "error": "#fb4934", "warning": "#fabd2f"},
+  "glassOpacity": 0.94, "blurIntensity": 0.35
+}

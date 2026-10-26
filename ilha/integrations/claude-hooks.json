@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "SessionStart": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}],
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}],
+    "PreToolUse": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}],
+    "PostToolUse": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}],
+    "PermissionRequest": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}],
+    "Notification": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}],
+    "Stop": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}],
+    "StopFailure": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}],
+    "SessionEnd": [{"hooks": [{"type": "command", "command": "python3 \"$HOME/.config/quickshell/ilha/scripts/claude_activity.py\"", "timeout": 4}]}]
+  }
+}

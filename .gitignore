@@ -1,0 +1,5 @@
+.qmlls.ini
+*.log
+__pycache__/
+*.pyc
+dist/

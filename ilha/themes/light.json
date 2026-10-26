@@ -1,0 +1,5 @@
+{
+  "id": "light", "name": "Claro",
+  "colors": {"background": "#f7f7f8", "surface": "#ffffff", "elevatedSurface": "#eeeeef", "text": "#1c1c20", "secondaryText": "#5e6068", "accent": "#5368d8", "border": "#d6d7dc", "success": "#287a4d", "error": "#bd3b49", "warning": "#a46a11"},
+  "glassOpacity": 0.96, "blurIntensity": 0.3
+}

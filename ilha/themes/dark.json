@@ -1,0 +1,18 @@
+{
+  "id": "dark",
+  "name": "Escuro",
+  "colors": {
+    "background": "#111216",
+    "surface": "#1a1b20",
+    "elevatedSurface": "#24262d",
+    "text": "#f2f2f4",
+    "secondaryText": "#afb0b8",
+    "accent": "#aeb9ff",
+    "border": "#40414a",
+    "success": "#88d8a2",
+    "error": "#ff9b9b",
+    "warning": "#ffd18a"
+  },
+  "glassOpacity": 0.9,
+  "blurIntensity": 0.4
+}

@@ -1,0 +1,5 @@
+{
+  "id": "tokyo-night", "name": "Tokyo Night",
+  "colors": {"background": "#1a1b26", "surface": "#24283b", "elevatedSurface": "#414868", "text": "#c0caf5", "secondaryText": "#a9b1d6", "accent": "#7aa2f7", "border": "#565f89", "success": "#9ece6a", "error": "#f7768e", "warning": "#e0af68"},
+  "glassOpacity": 0.94, "blurIntensity": 0.4
+}

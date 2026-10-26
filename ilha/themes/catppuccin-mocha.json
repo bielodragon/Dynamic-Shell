@@ -1,0 +1,5 @@
+{
+  "id": "catppuccin-mocha", "name": "Catppuccin Mocha",
+  "colors": {"background": "#1e1e2e", "surface": "#181825", "elevatedSurface": "#313244", "text": "#cdd6f4", "secondaryText": "#a6adc8", "accent": "#cba6f7", "border": "#6c7086", "success": "#a6e3a1", "error": "#f38ba8", "warning": "#f9e2af"},
+  "glassOpacity": 0.93, "blurIntensity": 0.4
+}
