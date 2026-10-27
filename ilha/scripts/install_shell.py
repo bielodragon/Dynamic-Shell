@@ -32,7 +32,9 @@ def install(mode, destdir=None, dry_run=False):
         destination.parent.mkdir(parents=True,exist_ok=True)
         shutil.copytree(SOURCE,destination,ignore=shutil.ignore_patterns('__pycache__','*.pyc','*.log','.qmlls.ini'))
     staged(binary).mkdir(parents=True,exist_ok=True)
-    for name, script in [('ilha','desktop_cli.py'),('ilha-activity','activity_cli.py')]:
+    for name, script in [('ilha','desktop_cli.py'),('ilha-activity','activity_cli.py'),('ilha-game','game_runner.py'),
+                         ('ilha-apps','app_integrations.py'),('ilha-minecraft','minecraft_activity.py'),('ilha-localsend','localsend_activity.py'),
+                         ('ilha-run','terminal_activity.py'),('ilha-editor','editor_extension.py'),('ilha-deps','install_dependencies.py')]:
         wrapper = staged(binary) / name
         if wrapper.exists() or wrapper.is_symlink():
             shutil.copy2(wrapper, str(wrapper)+'.bak.ilha-'+datetime.now().strftime('%Y%m%d-%H%M%S-%f'))
@@ -52,8 +54,10 @@ def dependencies():
     if not match or tuple(map(int,match.groups())) < (0,3,1): raise ValueError('É necessário Quickshell >= 0.3.1.')
     print('Quickshell:',version.strip())
     print('Pacotes para os módulos completos: python-dbus, python-gobject, qt6-websockets, pipewire, ttf-jetbrains-mono-nerd.')
+    print('Wallpapers animados nativos: qt6-multimedia, qt6-multimedia-ffmpeg e ffmpeg. FPS: mangohud e lib32-mangohud (opcionais).')
+    print('Atividades opcionais: steam, localsend com localsend-cli e prismlauncher; os wrappers não instalam jogos nem configuram instâncias automaticamente.')
     print('Integrações opcionais: networkmanager, bluez-utils, wireplumber, brightnessctl, power-profiles-daemon, kdeconnect, wl-clipboard, cliphist, kitty, hyprlock ou swaylock e Caelestia ou daemon awww/swww para wallpaper.')
-    print('Nenhum pacote será instalado por este script. Consulte DEPENDENCIAS.md para as opções.')
+    print('Nenhum pacote será instalado por este script. Revise ./install-deps.sh (ou ilha-deps após instalar); consulte DEPENDENCIAS.md.')
 
 
 def yes(question):
@@ -71,7 +75,7 @@ def main():
     try:
         if args.user and os.geteuid() == 0 and not args.destdir and not args.dry_run:
             raise ValueError('Execute ./install.sh sem sudo para instalar só no seu usuário.')
-        if not args.destdir: dependencies()
+        if not args.destdir and not args.dry_run: dependencies()
         result = install('user' if args.user else 'system',args.destdir,args.dry_run)
         print(json.dumps(result,ensure_ascii=False,indent=2))
         if args.destdir or args.dry_run: return 0

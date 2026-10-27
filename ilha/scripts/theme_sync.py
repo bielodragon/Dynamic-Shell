@@ -67,7 +67,12 @@ def synchronize(payload):
                 # Evita reaplicar o mesmo arquivo a cada ajuste de preferência.
                 state = Path(os.environ.get('XDG_STATE_HOME', Path.home() / '.local/state')) / 'ilha/wallpaper.json'
                 previous = json.loads(state.read_text()) if state.exists() else {}
-                if previous.get('path') == path: continue
+                from wallpaper_store import ANIMATED_EXTENSIONS
+                animated = Path(path).suffix.lower() in ANIMATED_EXTENSIONS
+                active = config.get('wallpaper',{})
+                if previous.get('path') == path:
+                    if not animated and not active.get('enabled'): continue
+                    if animated and active.get('enabled') and Path(active.get('path','')).resolve() == Path(path).expanduser().resolve(): continue
                 apply_wallpaper(path); write_json(state, {'path':path})
             applied.append(name)
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:

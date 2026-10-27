@@ -21,10 +21,15 @@ Singleton {
     onResultsChanged: selectedIndex = Math.max(0, Math.min(selectedIndex, results.length - 1))
     property var clipboardRows: []
     property var wallpaperRows: [] // Miniaturas consultadas sob demanda ao entrar no seletor.
+    property var integrationRows: []
+    property string integrationSource: ""
     property bool selectingTheme: false
     readonly property string commandBody: query.slice(1).replace(/^\s+/, "")
     readonly property string commandSection: /^(wallpaper|wallpapers|papel)\s/i.test(commandBody) ? "wallpapers"
-        : /^(scheme|schema|temas|theme)\s/i.test(commandBody) ? "themes" : "actions"
+        : /^(scheme|schema|temas|theme)\s/i.test(commandBody) ? "themes"
+        : /^(steam|jogos)\s/i.test(commandBody) ? "steam"
+        : /^(minecraft|mine|prism)\s/i.test(commandBody) ? "minecraft"
+        : /^localsend\s/i.test(commandBody) ? "localsend" : "actions"
     readonly property string commandFilter: commandBody.replace(/^\S+\s+/, "")
     property int selectedIndex: 0
     property string message: ""
@@ -59,6 +64,7 @@ Singleton {
         if (!opened) { closing = false; query = ""; clipboardRows = []; results = []; closeFallback.stop(); }
     }
     function setMode(value) { query = ({apps:"",calculator:"= ",clipboard:": ",commands:"> "})[value] || ""; }
+    function openWallpapers(name) { if (enabled) { open(name); query = "> wallpaper "; } }
     function move(delta) { if (results.length) selectedIndex = (selectedIndex + delta + results.length) % results.length; }
     function rebuild() {
         if (!opened) return;
@@ -72,6 +78,9 @@ Singleton {
                 results = Search.filterRows(ThemeStore.themes.map(theme => ({kind:"theme",id:theme.id,
                     title:theme.name,detail:theme.builtin ? "Tema pronto" : "Tema personalizado",
                     icon:"preferences-desktop-theme",swatches:[theme.colors.background,theme.colors.text,theme.colors.accent]})), commandFilter);
+            } else if (["steam","localsend","minecraft"].includes(commandSection)) {
+                results=integrationSource===commandSection ? Search.filterRows(integrationRows,commandFilter) : [];
+                debounce.restart();
             } else {
                 results = Search.actions(commandBody.trim());
                 if (!results.length && commandBody.trim()) results = [{kind:"command",title:commandBody.trim(),detail:"Executar no terminal",icon:"utilities-terminal"}];
@@ -93,6 +102,7 @@ Singleton {
         if (item.kind === "action") {
             if (item.id === "wallpapers") { wallpaperRows = []; query = "> wallpaper "; return; }
             if (item.id === "themes") { query = "> scheme "; return; }
+            if (["steam","localsend","minecraft"].includes(item.id)) { integrationRows=[];integrationSource="";query="> "+item.id+" ";return; }
             if (item.id === "light" || item.id === "dark") { selectTheme(item.id); return; }
         }
         if (item.kind === "theme") { selectTheme(item.id); return; }
@@ -101,6 +111,7 @@ Singleton {
         else if (item.kind === "calculator") { operation = "copy"; payload = {text:item.copyText}; }
         else if (item.kind === "clipboard") { operation = "copy-history"; payload = {id:item.id}; }
         else if (item.kind === "wallpaper") { operation = "wallpaper"; payload = {path:item.id}; }
+        else if (["integration-open","steam-game","minecraft-instance"].includes(item.kind)) { operation="integration-launch";payload={source:item.source,id:item.id}; }
         else if (item.kind === "action") { operation = item.id; payload = {}; }
         else { operation = "terminal"; payload = {command:item.title}; }
         actionBusy = true; message = "";
@@ -130,6 +141,7 @@ Singleton {
             if (root.mode === "calculator" && root.query.slice(1).trim()) root.requestRead("calculate", {expression:root.query.slice(1).trim()});
             if (root.mode === "clipboard") root.requestRead("history", {});
             if (root.mode === "commands" && root.commandSection === "wallpapers") root.requestRead("wallpapers", {});
+            if (root.mode === "commands" && ["steam","localsend","minecraft"].includes(root.commandSection)) root.requestRead("integration-list",{source:root.commandSection});
         }
     }
     Process {
@@ -147,6 +159,9 @@ Singleton {
                             root.wallpaperRows = response.rows;
                             root.results = Search.filterRows(response.rows, root.commandFilter);
                             if (!response.rows.length) root.message = "Adicione imagens em ~/Pictures/Wallpapers.";
+                        } else if (root.reading.operation === "integration-list") {
+                            root.integrationSource=root.reading.payload.source;root.integrationRows=response.rows;
+                            root.results=Search.filterRows(response.rows,root.commandFilter);
                         } else root.results = [{kind:"calculator",title:response.result,copyText:response.result,detail:"Enter para copiar o resultado",icon:"accessories-calculator"}];
                     }
                 } catch (_) { if (root.opened) root.message = "Não foi possível consultar os resultados."; }

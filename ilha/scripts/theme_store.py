@@ -121,6 +121,12 @@ def perform(operation, payload):
         theme_id = str(payload.get("id", ""))
         require_theme(theme_id)
         update_config({"theme": theme_id})
+    elif operation == 'animated_wallpaper':
+        from wallpaper_store import describe, thumbnail
+        media = describe(payload.get('path'))
+        thumbnail(media['path'],create=True)
+        previous = config().get('wallpaper',{})
+        update_config({'wallpaper':{**previous,'path':media['path'],'enabled':True,'paused':False}})
     elif operation in ("save", "duplicate", "import"):
         if operation == "import":
             source = Path(str(payload.get("path", ""))).expanduser()
@@ -190,13 +196,26 @@ def perform(operation, payload):
         update_config({"doNotDisturb": enabled})
     elif operation == 'preferences':
         changes = payload.get('values')
-        if not isinstance(changes, dict) or set(changes) - {'modules', 'animations', 'island', 'maxVisibleWorkspaces', 'shell', 'corners', 'sync', 'wallpapers'}:
+        if not isinstance(changes, dict) or set(changes) - {'modules', 'animations', 'island', 'maxVisibleWorkspaces', 'shell', 'corners', 'sync', 'wallpapers', 'monitoring', 'wallpaper', 'integrations'}:
             raise ValueError('Preferência desconhecida.')
         current = config()
         result = {}
         for key, values in changes.items():
-            if key in ('shell', 'corners', 'sync'):
-                fields = {'shell': {'islandVisible'}, 'corners': {'enabled', 'radius'}, 'sync': {'portal', 'kitty', 'hyprland', 'wallpaper'}}[key]
+            if key == 'wallpaper':
+                fields={'enabled','paused','path','pauseOnBattery','pauseOnFullscreen','pauseOnPerformance'}
+                if not isinstance(values,dict) or set(values)-fields: raise ValueError('Ajuste de wallpaper inválido.')
+                for name,value in values.items():
+                    if name=='path':
+                        if not isinstance(value,str) or len(value)>4096 or '\x00' in value: raise ValueError('Caminho inválido.')
+                    elif type(value) is not bool: raise ValueError('Ajuste exige verdadeiro/falso.')
+                merged={**current.get(key,{}),**values}
+                if merged.get('enabled') and (not current.get(key,{}).get('enabled') or merged.get('path')!=current.get(key,{}).get('path')):
+                    from wallpaper_store import describe
+                    merged['path']=describe(merged.get('path'))['path']
+                result[key]=merged
+                continue
+            elif key in ('shell', 'corners', 'sync', 'monitoring', 'integrations'):
+                fields = {'shell': {'islandVisible'}, 'corners': {'enabled', 'radius'}, 'sync': {'portal', 'kitty', 'hyprland', 'wallpaper'}, 'monitoring': {'battery', 'metrics', 'fps'}, 'integrations': {'steam', 'localsend', 'minecraft', 'terminal', 'editors'}}[key]
                 if not isinstance(values, dict) or set(values) - fields: raise ValueError('Preferência desconhecida.')
                 for name, value in values.items():
                     if name == 'radius':

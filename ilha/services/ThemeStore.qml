@@ -15,6 +15,7 @@ Singleton {
     property bool responseReceived: false
     property var jobs: []
     property string currentOperation: ""
+    property var currentPayload: ({})
     signal operationFinished(string operation, bool ok)
 
     readonly property var selectedTheme: themes.find(item => item.id === config.theme) || null
@@ -23,6 +24,7 @@ Singleton {
         if (busy || jobs.length === 0) return;
         const job = jobs.shift();
         currentOperation = job.operation;
+        currentPayload = job.payload;
         busy = true;
         responseReceived = false;
         worker.exec(["python3", Quickshell.shellPath("scripts/theme_store.py"), job.operation, JSON.stringify(job.payload)]);
@@ -47,7 +49,9 @@ Singleton {
         message = descriptions[currentOperation] || "";
         messageIsError = false;
         if (selectedTheme) Theme.apply(selectedTheme, config.overrides);
-        ThemeSync.schedule();
+        // Não reaplicar o wallpaper do tema ao selecionar outro fundo ou pausar sua animação.
+        if (["snapshot","select","save","duplicate","delete","import","overrides"].includes(currentOperation)
+            || (currentOperation === "preferences" && (currentPayload.values.sync || currentPayload.values.wallpapers))) ThemeSync.schedule();
         operationFinished(currentOperation, true);
     }
 

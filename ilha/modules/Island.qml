@@ -193,6 +193,7 @@ PanelWindow {
             id: contentRow
             anchors.centerIn: parent
             spacing: island.expanded ? 20 : 12
+            DeviceBattery { anchors.verticalCenter: parent.verticalCenter }
 
             Behavior on spacing {
                 NumberAnimation { duration: Theme.contentDuration; easing.type: Easing.OutCubic }

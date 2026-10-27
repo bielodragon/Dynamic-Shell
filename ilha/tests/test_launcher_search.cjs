@@ -18,7 +18,7 @@ test('busca fuzzy e palavras-chave encontram apps sem executar seus métodos', (
     assert.equal(executed, false);
 });
 test('prefixo de ações mostra catálogo e encontra aliases sem executar comandos', () => {
-    assert.equal(model.actions('').length, 6);
+    assert.equal(model.actions('').length, 9);
     for (const [query, id] of [['lock','lock'],['light','light'],['dark','dark'],['schema','themes'],['random','random-wallpaper']]) {
         assert.equal(model.actions(query)[0].id, id);
     }

@@ -24,6 +24,10 @@ def main():
         (data / 'ilha-launcher-fixture.desktop').write_text('[Desktop Entry]\nType=Application\nName=Ilha Launcher Fixture\nExec=' + sys.executable + ' ' + str(fixture) + '\nIcon=utilities-terminal\n')
         copied, terminal = folder / 'copied', folder / 'terminal.json'
         action_log = folder / 'actions.json'
+        steam=folder/'data/Steam/steamapps';steam.mkdir(parents=True)
+        (steam/'appmanifest_42.acf').write_text('"AppState" { "appid" "42" "name" "Ilha Jogo Fixture" }')
+        prism=folder/'data/PrismLauncher/instances/Ilha mundo';prism.mkdir(parents=True)
+        (prism/'instance.cfg').write_text('[General]\nname=Ilha Mundo Fixture\n')
         walls = folder / 'Pictures/Wallpapers'; walls.mkdir(parents=True)
         (walls / 'Ilha teste.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a2ioAAAAASUVORK5CYII='))
         for name, script in {
@@ -86,7 +90,7 @@ ShellRoot {
                 args = json.loads(terminal.read_text())
                 assert args == ['sh','-lc','printf "%s" "$(literal)"']
                 ipc('open',''); ipc('search','>')
-                wait_for(lambda s: s['mode']=='commands' and s['resultCount']==6)
+                wait_for(lambda s: s['mode']=='commands' and s['resultCount']==9)
                 assert not action_log.exists(), 'Mostrar ações não pode mudar wallpaper ou bloquear.'
                 ipc('activate')  # Primeira ação: abrir seletor, sem aplicar wallpaper.
                 wait_for(lambda s: s['resultCount']==1 and not s['busy'])
@@ -106,6 +110,14 @@ ShellRoot {
                 ipc('search','> scheme Nord'); wait_for(lambda s: s['resultCount']==1)
                 ipc('activate'); wait_for(lambda s: not s['opened'])
                 assert json.loads((folder / 'config/ilha/config.json').read_text())['theme']=='nord'
+                # Catálogos reais, sem iniciar clientes ou jogos.
+                saved_terminal=terminal.read_bytes();saved_action=action_log.read_bytes()
+                ipc('open','')
+                for source,query,count in [('steam','Ilha Jogo Fixture',1),('minecraft','Ilha Mundo Fixture',1),('localsend','LocalSend',2)]:
+                    ipc('search','>');wait_for(lambda s:s['resultCount']==9)
+                    ipc('search','> '+source+' '+query)
+                    wait_for(lambda s:s['resultCount']==count and not s['busy'])
+                assert terminal.read_bytes()==saved_terminal and action_log.read_bytes()==saved_action
                 for mode, identifier in [('light','light'),('dark','dark')]:
                     ipc('open',''); ipc('search','> '+mode)
                     wait_for(lambda s: s['resultCount']==1)

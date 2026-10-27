@@ -1,5 +1,8 @@
 {
   "theme": "dark",
+  "integrations": {"steam": true, "localsend": true, "minecraft": true, "terminal": true, "editors": true},
+  "wallpaper": {"enabled": false, "path": "", "paused": false, "pauseOnBattery": true, "pauseOnFullscreen": true, "pauseOnPerformance": true},
+  "monitoring": {"battery": true, "metrics": false, "fps": false},
   "shell": {"islandVisible": true},
   "corners": {"enabled": true, "radius": 18},
   "sync": {"portal": false, "kitty": false, "hyprland": false, "wallpaper": false},

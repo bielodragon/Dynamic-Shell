@@ -27,7 +27,7 @@ Singleton {
     }
     IpcHandler {
         target: "settings"
-        function open(page: string): void { root.open(["modules", "appearance", "themes"].includes(page) ? page : "modules"); }
+        function open(page: string): void { root.open(["modules", "appearance", "themes", "wallpaper"].includes(page) ? page : "modules"); }
         function close(): void { root.opened = false; }
         function status(): string { return JSON.stringify({ opened: root.opened, page: root.page, modules: Preferences.modules,
             animationsEnabled: Preferences.animationsEnabled, animationScale: Preferences.animationScale,

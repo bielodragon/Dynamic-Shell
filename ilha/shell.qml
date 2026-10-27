@@ -6,6 +6,21 @@ ShellRoot {
     readonly property bool themeLoaded: ThemeStore.ready
     readonly property bool shellReady: ShellState.islandVisible
     readonly property bool syncReady: ThemeSync.loaded
+    readonly property bool deviceLoaded: DeviceState.showBattery
+    readonly property bool appsLoaded: AppIntegrationsState.enabled
+    Variants {
+        model: Quickshell.screens
+        delegate: LazyLoader {
+            required property var modelData
+            source: Quickshell.shellPath("modules/WallpaperSurface.qml")
+            activeAsync: WallpaperState.enabled
+            onActiveChanged: if (active && item) item.screen = modelData
+        }
+    }
+    Variants {
+        model: Quickshell.screens
+        delegate: DeviceOverlay { required property var modelData; screen: modelData }
+    }
     LazyLoader {
         activeAsync: SettingsState.opened
         SettingsWindow { }
