@@ -17,7 +17,7 @@ FloatingWindow {
         {key:"workspaces", title:"Workspaces", description:"Indicadores, clique e navegação entre áreas"},
         {key:"notifications", title:"Notificações do desktop", description:"Servidor e bolhas da Ilha; não altera outros shells"},
         {key:"media", title:"Mídia", description:"MPRIS na ilha e no Control Center"},
-        {key:"activities", title:"Atividades de desenvolvimento", description:"Receber estados e progresso por CLI/IPC"},
+        {key:"activities", title:"Atividades de aplicativos", description:"Desenvolvimento, jogos e transferências por adapters/IPC"},
         {key:"privacy", title:"Privacidade e gravação", description:"Observar PipeWire e OBS; não interrompe capturas"},
         {key:"phone", title:"KDE Connect", description:"Bateria e eventos do celular; não desconecta o aparelho"}
     ]
@@ -33,7 +33,7 @@ FloatingWindow {
         Row {
             x: 24; y: 70; spacing: 10
             Repeater {
-                model: [{key:"modules",title:"Módulos"},{key:"appearance",title:"Aparência"},{key:"themes",title:"Temas e cores"}]
+                model: [{key:"modules",title:"Módulos"},{key:"appearance",title:"Aparência"},{key:"themes",title:"Temas e cores"},{key:"wallpaper",title:"Wallpapers"}]
                 ThemeButton { required property var modelData; label: modelData.title; emphasized: SettingsState.page === modelData.key; onClicked: SettingsState.page = modelData.key }
             }
             ThemeButton { label: "HyprMod ↗"; onClicked: SettingsState.launchHyprmod() }
@@ -57,6 +57,10 @@ FloatingWindow {
             Column {
                 id: column
                 width: parent.width; spacing: 14
+                WallpaperControls {
+                    width:parent.width; visible:SettingsState.page === "wallpaper"
+                    onBrowseRequested: LauncherState.openWallpapers(root.screen ? root.screen.name : "")
+                }
                 Column {
                     width: parent.width; spacing: 10; visible: SettingsState.page === "modules"
                     Repeater {
@@ -69,6 +73,21 @@ FloatingWindow {
                         }
                     }
                     Text { width: parent.width; text: "A ilha e o Control Center continuam acessíveis para reativar módulos. Desativar privacidade apenas esconde os indicadores e para seus observadores; câmera, áudio e gravações continuam sob controle dos aplicativos."; color: Theme.warning; font.family: Theme.fontFamily; font.pixelSize: 11; wrapMode: Text.WordWrap }
+                    Text { text:"Atividades integradas"; color:Theme.text; font.family:Theme.fontFamily; font.pixelSize:16 }
+                    Repeater {
+                        model:[{key:"steam",name:"Steam",detail:"Contadores de downloads e jogos pelo wrapper da Ilha"},
+                            {key:"localsend",name:"LocalSend",detail:"Transferências pelo CLI integrado; sem aceitar arquivos automaticamente"},
+                            {key:"minecraft",name:"Minecraft Java",detail:"Inicialização e execução pelo wrapper do Prism"},
+                            {key:"terminal",name:"Terminal / pacman / yay",detail:"Comandos iniciados com ilha-run; sem ler entrada ou saída"},
+                            {key:"editors",name:"VS Code / VSCodium",detail:"Tarefas, depuração e terminal pela extensão local da Ilha"}]
+                        SettingsToggle {
+                            required property var modelData
+                            width:parent.width
+                            label:modelData.name;description:modelData.detail
+                            checked:(ThemeStore.config.integrations || {})[modelData.key] !== false
+                            onToggled:{ const values={};values[modelData.key]=!checked;ThemeStore.setPreferences({integrations:values}); }
+                        }
+                    }
                 }
                 Column {
                     width: parent.width; spacing: 14; visible: SettingsState.page === "appearance"

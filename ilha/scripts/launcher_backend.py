@@ -89,6 +89,12 @@ def terminal(command):
 
 
 def perform(operation, payload):
+    if operation == 'integration-list':
+        from app_integrations import catalog
+        return {'rows':catalog(payload.get('source'))}
+    if operation == 'integration-launch':
+        from app_integrations import launch
+        launch(payload.get('source'),payload.get('id','client'));return {}
     if operation in ('wallpapers', 'wallpaper', 'random-wallpaper', 'lock'):
         import launcher_actions as actions
         if operation == 'wallpapers': return {'rows': actions.wallpapers()}

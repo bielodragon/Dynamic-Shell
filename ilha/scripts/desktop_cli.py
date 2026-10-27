@@ -74,6 +74,8 @@ def main():
             if args.action in ('stop','toggle','reload'):
                 was_running = bool(running())
                 if was_running:
+                    from performance_mode import apply as restore_performance, enabled as performance_enabled
+                    if performance_enabled(): restore_performance(False)
                     command([QS,'-c','ilha','kill'])
                     for _ in range(30):
                         if not running(): break

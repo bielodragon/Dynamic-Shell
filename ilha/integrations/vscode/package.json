@@ -1,0 +1,25 @@
+{
+  "name": "ilha-activities",
+  "displayName": "Ilha — Atividades",
+  "description": "Tarefas, depuração e terminal integrado na Ilha, sem transmitir comandos ou logs.",
+  "version": "0.1.0",
+  "publisher": "bielodragon",
+  "license": "MIT",
+  "engines": {"vscode": "^1.93.0"},
+  "categories": ["Other"],
+  "extensionKind": ["ui"],
+  "main": "./extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "capabilities": {"untrustedWorkspaces": {"supported": false}, "virtualWorkspaces": false},
+  "contributes": {
+    "commands": [{"command": "ilhaActivities.preview", "title": "Ilha: mostrar atividade de teste"}],
+    "configuration": {
+      "title": "Ilha",
+      "properties": {
+        "ilhaActivities.enabled": {"type": "boolean", "default": true, "scope": "application", "description": "Enviar atividades genéricas à Ilha."},
+        "ilhaActivities.terminal": {"type": "boolean", "default": true, "scope": "application", "description": "Acompanhar terminais com shell integration; sem ler comandos nem saída."},
+        "ilhaActivities.bridgePath": {"type": "string", "default": "", "scope": "application", "description": "Caminho opcional para scripts/ide_activity_bridge.py da Ilha instalada."}
+      }
+    }
+  }
+}

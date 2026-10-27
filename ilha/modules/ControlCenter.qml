@@ -130,6 +130,36 @@ PanelWindow {
                         width: parent.width; columns: 2; spacing: 10
                         ControlTile {
                             width: (parent.width - 10) / 2
+                            title: "Modo desempenho"; symbol: "󰓅"
+                            active: !!DeviceState.controls.performance
+                            detail: active ? "Restaurar efeitos anteriores" : "Reduzir blur, sombras e animações"
+                            enabled: !DeviceState.busy
+                            onClicked: DeviceState.action("performance",!active)
+                        }
+                        ControlTile {
+                            width: (parent.width - 10) / 2
+                            title: "Status do dispositivo"; symbol: "󰍛"
+                            active: DeviceState.showMetrics
+                            detail: "CPU, RAM e sensores disponíveis"
+                            onClicked: DeviceState.metrics(!active)
+                        }
+                        ControlTile {
+                            width: (parent.width - 10) / 2
+                            title: "FPS nos jogos"; symbol: "󰊴"
+                            active: DeviceState.showFps
+                            detail: !DeviceState.controls.mangoAvailable ? "MangoHud não instalado" : "Use ilha-game para iniciar o jogo"
+                            enabled: !DeviceState.busy && !!DeviceState.controls.mangoAvailable
+                            onClicked: DeviceState.fps(!active)
+                        }
+                        ControlTile {
+                            width: (parent.width - 10) / 2
+                            title: "Bateria na ilha"; symbol: "󰁹"
+                            active: DeviceState.showBattery
+                            detail: DeviceState.batteries.length ? "Mostrar somente se houver bateria" : "Este computador não tem bateria"
+                            onClicked: ThemeStore.setPreferences({monitoring:{battery:!active}})
+                        }
+                        ControlTile {
+                            width: (parent.width - 10) / 2
                             title: "Wi-Fi"; symbol: "󰖩"; active: !!root.net.wifi
                             detail: !root.net.available ? "Indisponível" : !root.net.wifiHardware ? "Bloqueado no hardware" : root.net.wifi ? (root.net.connection || "Ligado") : "Desligado"
                             enabled: !!root.net.available && !!root.net.wifiHardware && !root.busy && !root.state.airplaneManaged
@@ -232,6 +262,7 @@ PanelWindow {
                     Row {
                         spacing: 10
                         ThemeButton { label: "Configurações"; onClicked: { SettingsState.open("modules"); root.close(); } }
+                        ThemeButton { label: "Wallpapers"; onClicked: { SettingsState.open("wallpaper"); root.close(); } }
                         ThemeButton { label: "HyprMod ↗"; onClicked: { SettingsState.launchHyprmod(); } }
                     }
                     Text {
@@ -246,6 +277,11 @@ PanelWindow {
                     }
                     Flow {
                         width: parent.width; spacing: 8
+                        Text {
+                            width: parent.width; visible: DeviceState.message.length > 0
+                            text: DeviceState.message; wrapMode: Text.WordWrap; textFormat: Text.PlainText
+                            color: Theme.error; font.family: Theme.fontFamily; font.pixelSize: 11
+                        }
                         Repeater {
                             model: ["lock", "suspend", "logout", "reboot", "poweroff"]
                             ThemeButton {

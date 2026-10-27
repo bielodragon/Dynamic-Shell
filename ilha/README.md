@@ -6,6 +6,10 @@ O checkpoint de desenvolvimento local fica em `../RETOMADA.md`; ele é excluído
 
 Atividades de qualquer programa, protocolo CLI/IPC e instruções para Claude Code/OpenCode 2: [guia de integrações](integrations/README.md).
 
+Steam, LocalSend e Minecraft Java: [catálogos na pesquisa, atividades e wrappers](integrations/APPS-JOGOS.md).
+
+Terminal/pacman/yay e VS Code/VSCodium: [wrapper explícito e extensão local](integrations/TERMINAL-EDITORES.md).
+
 Privacidade e gravação do OBS: [funcionamento, testes e limites](integrations/PRIVACIDADE.md).
 
 Celular, bateria, notificações e chamadas: [integração KDE Connect](integrations/KDECONNECT.md).

@@ -36,7 +36,10 @@ function actions(query) {
         {id:"dark", title:"Modo escuro", detail:"Aplicar o tema Escuro da Ilha", icon:"weather-clear-night", keywords:"dark escuro"},
         {id:"random-wallpaper", title:"Wallpaper aleatório", detail:"Sortear uma imagem de ~/Pictures/Wallpapers", icon:"media-playlist-shuffle", keywords:"random randomizar wallpaper aleatorio"},
         {id:"themes", title:"Mudar esquema de cores", detail:"Escolher entre os temas prontos e personalizados", icon:"preferences-desktop-theme", keywords:"scheme schema esquema cores tema theme"},
-        {id:"lock", title:"Bloquear tela", detail:"Bloquear a sessão atual", icon:"system-lock-screen", keywords:"lock bloquear"}
+        {id:"lock", title:"Bloquear tela", detail:"Bloquear a sessão atual", icon:"system-lock-screen", keywords:"lock bloquear"},
+        {id:"steam", title:"Steam e jogos", detail:"Abrir Steam e jogos da biblioteca local", icon:"steam", keywords:"steam jogos games"},
+        {id:"localsend", title:"LocalSend", detail:"Abrir o app ou transferências com atividades na Ilha", icon:"localsend", keywords:"localsend compartilhar arquivos"},
+        {id:"minecraft", title:"Minecraft Java", detail:"Instâncias do Prism Launcher", icon:"org.prismlauncher.PrismLauncher", keywords:"minecraft mine java prism"}
     ];
     return rows.map((row, order) => Object.assign({kind:"action",order:order}, row, {rank:score(row.title,row.keywords,query)}))
         .filter(row => row.rank > 0).sort((a,b) => b.rank - a.rank || a.order - b.order);

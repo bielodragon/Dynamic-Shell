@@ -51,6 +51,7 @@ PanelWindow {
                 opacity: root.progress
                 Row {
                     x: 22; y: 10; spacing: 12
+                    DeviceBattery { anchors.verticalCenter: parent.verticalCenter }
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: Preferences.enabled("clock")

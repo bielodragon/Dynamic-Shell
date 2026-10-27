@@ -2,11 +2,13 @@
 
 ## Dois escopos
 
-`./install.sh` copia `ilha/` para `$XDG_CONFIG_HOME/quickshell/ilha` (padrão `~/.config/quickshell/ilha`) e cria `ilha`/`ilha-activity` em `~/.local/bin`. Executar do próprio destino não recopia nem remove o código.
+`./install.sh` copia `ilha/` para `$XDG_CONFIG_HOME/quickshell/ilha` (padrão `~/.config/quickshell/ilha`) e cria os comandos em `~/.local/bin`: `ilha`, `ilha-activity`, `ilha-game`, `ilha-apps`, `ilha-minecraft`, `ilha-localsend`, `ilha-run`, `ilha-editor` e `ilha-deps`. Executar do próprio destino não recopia nem remove o código.
 
 `sudo ./install-system.sh` instala o código em `/etc/xdg/quickshell/ilha` e os comandos em `/usr/local/bin`. Nenhum diretório pessoal é escrito como root e nenhum autostart global é imposto. Cada usuário habilita sua integração com `ilha setup --apply`. Configurações pessoais de Quickshell têm precedência sobre `/etc/xdg`; mantenha apenas a versão que pretende executar, fazendo backup antes de mover a anterior.
 
 Atualizações fazem backup do código anterior e dos comandos substituídos. Nunca sobrescrevem `~/.config/ilha/config.json`, seus temas, imagens, configurações do OBS ou aplicativos de desenvolvimento. `--destdir` redireciona toda a instalação para staging e desativa interação/ativação; wrappers apontam para o destino final, para empacotamento. `--dry-run` não grava nada.
+
+Antes da cópia, `./install-deps.sh --profile full` apresenta dependências; `--apply` pede confirmação. Depois de instalar a Ilha, `ilha-deps` oferece o mesmo recurso. [Perfis, AUR e limites](../../DEPENDENCIAS.md). A instalação global do código usa sudo; o instalador de dependências deve ser executado como usuário e eleva apenas a etapa de repositórios.
 
 ## Hyprland
 

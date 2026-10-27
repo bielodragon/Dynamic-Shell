@@ -68,14 +68,8 @@ def profiles():
 
 
 def battery():
-    entries = []
-    for path in Path('/sys/class/power_supply').glob('*'):
-        try:
-            if (path / 'type').read_text().strip() != 'Battery': continue
-            entries.append({'name': path.name, 'percent': int((path / 'capacity').read_text()),
-                            'status': (path / 'status').read_text().strip()})
-        except (OSError, ValueError): continue
-    return {'available': bool(entries), 'batteries': entries}
+    from device_metrics import battery as device_battery
+    return device_battery()
 
 
 def capabilities():
