@@ -10,6 +10,8 @@ Steam, LocalSend e Minecraft Java: [catálogos na pesquisa, atividades e wrapper
 
 Terminal/pacman/yay e VS Code/VSCodium: [wrapper explícito e extensão local](integrations/TERMINAL-EDITORES.md).
 
+Redes Wi-Fi, dispositivos Bluetooth e `ilha update`: [uso, atualização por releases e limites](integrations/CONECTIVIDADE-UPDATE.md).
+
 Privacidade e gravação do OBS: [funcionamento, testes e limites](integrations/PRIVACIDADE.md).
 
 Celular, bateria, notificações e chamadas: [integração KDE Connect](integrations/KDECONNECT.md).

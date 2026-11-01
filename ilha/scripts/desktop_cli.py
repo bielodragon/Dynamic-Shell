@@ -51,12 +51,17 @@ def clipboard():
 
 def main():
     parser = argparse.ArgumentParser(description='Controla o shell Ilha sem remover Caelestia/Omarchy.')
-    parser.add_argument('action', choices=['start','stop','toggle','reload','status','island-toggle','launcher','settings','setup','bars','sync'])
+    parser.add_argument('action', choices=['start','stop','toggle','reload','status','island-toggle','launcher','settings','setup','bars','sync','update'])
+    parser.add_argument('--check',action='store_true',help='Em update, consulta a release sem instalar.')
     parser.add_argument('--apply',action='store_true',help='Aplica a configuração preparada com backup.')
     parser.add_argument('--hide',action='store_true')
     parser.add_argument('--restore',action='store_true')
     args = parser.parse_args()
+    if args.check and args.action!='update':parser.error('--check só pode ser usado com update.')
     try:
+        if args.action=='update':
+            from update_shell import main as update
+            return update(args.check)
         from desktop_setup import conflicts, prepare_hyprland, bars
         if args.action == 'setup':
             # Sem --apply apenas mostra o bloco completo para revisão.

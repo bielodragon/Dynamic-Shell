@@ -112,8 +112,15 @@ PanelWindow {
                 onPressed: mouse => startY = mouse.y
                 onReleased: mouse => { if (mouse.y - startY < -30) root.close(); }
             }
+            Loader {
+                x:22;y:112;width:parent.width-44;height:Math.max(0,parent.height-y-18)
+                active:ConnectivityState.mode !== ""
+                asynchronous:true
+                sourceComponent:ConnectivityPanel { }
+            }
             Flickable {
                 id: scroll
+                visible: ConnectivityState.mode === ""
                 x: 22; y: 112; width: parent.width - 44; height: Math.max(0, parent.height - y - 18)
                 contentHeight: content.height
                 clip: true; opacity: root.progress
@@ -163,14 +170,14 @@ PanelWindow {
                             title: "Wi-Fi"; symbol: "󰖩"; active: !!root.net.wifi
                             detail: !root.net.available ? "Indisponível" : !root.net.wifiHardware ? "Bloqueado no hardware" : root.net.wifi ? (root.net.connection || "Ligado") : "Desligado"
                             enabled: !!root.net.available && !!root.net.wifiHardware && !root.busy && !root.state.airplaneManaged
-                            onClicked: ControlCenterState.action("wifi", !root.net.wifi)
+                            onClicked: ConnectivityState.open("wifi")
                         }
                         ControlTile {
                             width: (parent.width - 10) / 2
                             title: "Bluetooth"; symbol: "󰂯"; active: !!root.blue.powered
                             detail: !root.blue.available ? "Sem adaptador" : root.blue.powered ? root.blue.connected + " conectado(s)" : "Desligado"
                             enabled: !!root.blue.available && !root.busy && !root.state.airplaneManaged
-                            onClicked: ControlCenterState.action("bluetooth", !root.blue.powered)
+                            onClicked: ConnectivityState.open("bluetooth")
                         }
                         ControlTile {
                             width: (parent.width - 10) / 2

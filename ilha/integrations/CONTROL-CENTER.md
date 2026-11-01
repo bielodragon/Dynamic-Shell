@@ -8,8 +8,8 @@ O painel é carregado por `LazyLoader` apenas quando necessário e mantém a ins
 
 | Controle | Comportamento |
 | --- | --- |
-| Wi-Fi | Liga/desliga o rádio pelo NetworkManager e mostra a conexão principal. Não é um seletor de redes/senhas |
-| Bluetooth | Liga/desliga adaptadores BlueZ e informa o número de dispositivos conectados. Pareamento continua no gerenciador Bluetooth |
+| Wi-Fi | Abre redes disponíveis, senha/perfis salvos e ações para conectar/desconectar/esquecer; controle do rádio dentro do painel |
+| Bluetooth | Abre dispositivos, busca, pareamento com PIN/confirmação, conectar/desconectar, confiança, bloqueio e remoção |
 | Modo avião | Desliga rádios Wi-Fi/WWAN geridos pelo NetworkManager e adaptadores Bluetooth. Ao desativar, restaura os estados salvos antes de ativar |
 | Não perturbe | Usa o estado persistente já existente do servidor de notificações da Ilha |
 | Volume | Saída padrão do PipeWire, de 0 a 100%, com botão mudo. O valor é enviado ao soltar o slider ou usar as teclas de ajuste |

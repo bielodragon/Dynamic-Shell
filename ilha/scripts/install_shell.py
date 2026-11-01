@@ -25,12 +25,15 @@ def install(mode, destdir=None, dry_run=False):
     if mode == 'system' and not destdir and os.geteuid() != 0:
         raise ValueError('Execute sudo ./install-system.sh. Nenhuma configuração pessoal será escrita como root.')
     destination = staged(target)
+    release=None
+    try:release=json.loads((SOURCE/'.ilha-install.json').read_text()).get('release')
+    except (OSError,ValueError,AttributeError):pass
     if destination.resolve() != SOURCE.resolve():
         if destination.exists():
             backup = Path(str(destination)+'.bak.ilha-'+datetime.now().strftime('%Y%m%d-%H%M%S-%f'))
             destination.rename(backup); result['backup'] = str(backup)
         destination.parent.mkdir(parents=True,exist_ok=True)
-        shutil.copytree(SOURCE,destination,ignore=shutil.ignore_patterns('__pycache__','*.pyc','*.log','.qmlls.ini'))
+        shutil.copytree(SOURCE,destination,ignore=shutil.ignore_patterns('__pycache__','*.pyc','*.log','.qmlls.ini','.ilha-install.json'))
     staged(binary).mkdir(parents=True,exist_ok=True)
     for name, script in [('ilha','desktop_cli.py'),('ilha-activity','activity_cli.py'),('ilha-game','game_runner.py'),
                          ('ilha-apps','app_integrations.py'),('ilha-minecraft','minecraft_activity.py'),('ilha-localsend','localsend_activity.py'),
@@ -41,6 +44,7 @@ def install(mode, destdir=None, dry_run=False):
             if wrapper.is_symlink(): wrapper.unlink()
         wrapper.write_text('#!/bin/sh\nexec python3 '+shlex.quote(str(target / 'scripts' / script))+' "$@"\n')
         wrapper.chmod(0o755)
+    (destination/'.ilha-install.json').write_text(json.dumps({'repository':'bielodragon/Dynamic-Shell','scope':mode,'release':release},indent=2)+'\n')
     if mode == 'user':
         staged(Path.home() / 'Pictures/Wallpapers').mkdir(parents=True,exist_ok=True)
     return result
