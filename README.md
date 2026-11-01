@@ -14,6 +14,8 @@ Steam, LocalSend e Minecraft Java já têm catálogos na pesquisa `>` e adaptado
 
 Terminal e editores: `ilha-run -- comando` acompanha execução e término, incluindo pacman/yay. A extensão local de VS Code/VSCodium acompanha tarefas, depuração e terminal integrado. Instale em um editor existente com `ilha-editor --install codium` ou `--install code`. [Uso, privacidade e testes](ilha/integrations/TERMINAL-EDITORES.md).
 
+Os cards **Wi-Fi** e **Bluetooth** abrem listas para conectar/desconectar e gerenciar redes/dispositivos. `ilha update --check` consulta releases; `ilha update` instala com confirmação e backup em instalações fora de checkouts Git. [Conectividade, atualização e limites](ilha/integrations/CONECTIVIDADE-UPDATE.md).
+
 ## Instalar
 
 Depois de baixar/clonar este repositório, revise as dependências e escolha **uma** opção de instalação:
@@ -48,6 +50,7 @@ ilha stop
 ilha reload
 ilha settings
 ilha status
+ilha update --check
 ```
 
 Wallpapers: `~/Pictures/Wallpapers`. As opções de sincronização com GTK/Qt, Kitty, bordas e wallpaper por tema ficam em Configurações → Aparência e começam desligadas. [O que cada integração altera](ilha/integrations/INSTALACAO.md).
