@@ -33,7 +33,7 @@ def main():
         for name, script in {
             'wl-copy':'import sys\nfrom pathlib import Path\nPath(' + repr(str(copied)) + ').write_bytes(sys.stdin.buffer.read())\n',
             'xdg-terminal-exec':'import sys,json\nfrom pathlib import Path\nPath(' + repr(str(terminal)) + ').write_text(json.dumps(sys.argv[1:]))\n',
-            'caelestia':'import sys,json\nfrom pathlib import Path\nPath(' + repr(str(action_log)) + ').write_text(json.dumps(sys.argv[1:]))\n'
+            'caelestia':'import sys,json\nfrom pathlib import Path\nif sys.argv[1:]==["shell","lock","isLocked"]: print("false")\nelse: Path(' + repr(str(action_log)) + ').write_text(json.dumps(sys.argv[1:]))\n'
         }.items():
             path = binary / name; path.write_text('#!' + sys.executable + '\n' + script); path.chmod(0o700)
         env = dict(os.environ, HOME=str(folder), PATH=str(binary) + ':' + os.environ['PATH'], XDG_CONFIG_HOME=str(folder / 'config'),

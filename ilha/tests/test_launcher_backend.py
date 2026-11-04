@@ -60,8 +60,9 @@ class LauncherTests(unittest.TestCase):
                 actions.apply_wallpaper(str(image))
                 self.assertEqual(run.call_args.args[0], ['/usr/bin/caelestia','wallpaper','-f',str(image),'-N'])
                 self.assertNotIn('shell', run.call_args.kwargs)
-                actions.lock()
-                self.assertEqual(run.call_args.args[0], ['/usr/bin/caelestia','shell','lock','lock'])
+                with patch('session_actions.lock') as lock_session:
+                    actions.lock()
+                    lock_session.assert_called_once_with()
 
     def test_random_wallpaper_reports_empty_directory(self):
         with tempfile.TemporaryDirectory() as temporary:
