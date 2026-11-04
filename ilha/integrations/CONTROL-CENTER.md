@@ -24,7 +24,11 @@ Controles indisponíveis são desabilitados. Erros de permissão, serviço ou ha
 
 O helper `system_controls.py` usa uma lista fechada de ações e listas de argumentos, sem interpretação por shell. Rejeita valores inválidos, porcentagens fora do intervalo e perfis não anunciados. Ações de sessão exigem confirmação também no helper. Volume limita a saída a 100%; brilho não chega a zero.
 
-O bloqueio usa o comando do Omarchy quando disponível, ou hyprlock/swaylock existentes. Sair usa `uwsm stop`; os demais comandos usam `systemctl` e as permissões normais do logind/Polkit. Não foram executadas ações de desligamento, reinício, suspensão, bloqueio ou saída durante os testes.
+O bloqueio consulta por IPC os provedores ativos: Caelestia e Omarchy. Um shell apenas instalado não é selecionado. Se já houver bloqueio ativo, ele é preservado; sem esses provedores, pode usar hyprlock/swaylock existentes, verificando falha de inicialização. O launcher `> lock` usa a mesma seleção.
+
+Sair usa `uwsm stop` somente quando o compositor atual pertence a uma unidade `wayland-wm@*.service`. Em Hyprland sem UWSM, prefere hyprshutdown quando instalado, ou usa o dispatcher da versão ativa: `hl.dsp.exit()` em Lua validado por introspecção, ou `exit` nas versões antigas. A presença do binário UWSM ou de graphical-session.target não define a sessão como gerenciada. Os demais comandos usam systemctl e permissões logind/Polkit. Falha de logind não desabilita bloqueio/saída que tenham provedor próprio.
+
+Correção de 04/11/2026: nesta sessão SDDM/Hyprland, o seletor identifica **Caelestia** para bloquear e **Hyprland** para sair. Métodos e capacidades reais foram consultados somente em leitura. Testes simulados validam execução após confirmação e erros IPC, incluindo respostas inválidas com exit code zero. Não foram executados bloqueio, saída, desligamento, reinício ou suspensão reais; a validação final das duas ações fica com o usuário. [Dispatcher no exemplo oficial do Hyprland](https://github.com/hyprwm/Hyprland/blob/main/example/hyprland.lua), [unidades do UWSM](https://github.com/Vladimir-csp/uwsm).
 
 ## Modo avião e restauração
 
