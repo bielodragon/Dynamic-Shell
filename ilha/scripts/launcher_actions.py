@@ -68,14 +68,5 @@ def random_wallpaper():
 
 
 def lock():
-    # O lock do Caelestia já é o provedor da sessão; não iniciar outro shell.
-    executable = shutil.which('caelestia')
-    if not executable:
-        executable = shutil.which('hyprlock') or shutil.which('swaylock')
-        if not executable: raise RuntimeError('Nenhum bloqueador disponível: Caelestia, hyprlock ou swaylock.')
-        subprocess.Popen([executable],start_new_session=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-        return
-    result = subprocess.run([executable, 'shell', 'lock', 'lock'],
-                            capture_output=True, text=True, timeout=5)
-    if result.returncode:
-        raise RuntimeError('Não foi possível solicitar o bloqueio da sessão.')
+    from session_actions import lock as lock_session
+    lock_session()

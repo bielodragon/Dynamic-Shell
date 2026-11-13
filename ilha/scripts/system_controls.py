@@ -73,15 +73,22 @@ def battery():
 
 
 def capabilities():
-    import dbus
-    bus = dbus.SystemBus()
-    manager = dbus.Interface(bus.get_object('org.freedesktop.login1', '/org/freedesktop/login1'),
-                             'org.freedesktop.login1.Manager')
-    return {'available': True, 'poweroff': str(manager.CanPowerOff(timeout=2)) in ('yes', 'challenge'),
-            'reboot': str(manager.CanReboot(timeout=2)) in ('yes', 'challenge'),
-            'suspend': str(manager.CanSuspend(timeout=2)) in ('yes', 'challenge'),
-            'lock': bool(shutil.which('omarchy') or shutil.which('hyprlock') or shutil.which('swaylock')),
-            'logout': bool(shutil.which('uwsm'))}
+    from session_actions import lock_plan,logout_plan
+    locker,exit_session=lock_plan(),logout_plan()
+    result={'available':True,'lock':bool(locker),'logout':bool(exit_session),
+            'lockProvider':locker['provider'] if locker else '',
+            'logoutProvider':exit_session['provider'] if exit_session else '',
+            'poweroff':False,'reboot':False,'suspend':False}
+    try:import dbus
+    except ImportError:return result
+    try:
+        bus=dbus.SystemBus()
+        manager=dbus.Interface(bus.get_object('org.freedesktop.login1','/org/freedesktop/login1'),'org.freedesktop.login1.Manager')
+        for name,method in [('poweroff','CanPowerOff'),('reboot','CanReboot'),('suspend','CanSuspend')]:
+            try:result[name]=str(getattr(manager,method)(timeout=2)) in ('yes','challenge')
+            except dbus.DBusException:pass
+    except (dbus.DBusException,OSError):pass
+    return result
 
 
 def snapshot():
@@ -163,11 +170,12 @@ def action(name, value=None, confirmed=False):
         if confirmed is not True: raise ValueError('Confirme a ação no painel.')
         if not capabilities().get(name): raise RuntimeError('Ação de sessão indisponível.')
         if name in ('poweroff', 'reboot', 'suspend'): run(['systemctl', name])
-        elif name == 'logout': run(['uwsm', 'stop'])
-        elif shutil.which('omarchy'): run(['omarchy', 'system', 'lock'])
+        elif name == 'logout':
+            from session_actions import logout
+            logout()
         else:
-            executable = shutil.which('hyprlock') or shutil.which('swaylock')
-            subprocess.Popen([executable], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+            from session_actions import lock
+            lock()
     else: raise ValueError('Ação desconhecida.')
 
 
